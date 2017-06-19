@@ -12,7 +12,6 @@ using namespace cv;
 int main() {
 	// declares all required variables
 	char filename[128];
-	char trackerMethod[5][15] = { "MIL","BOOSTING","MEDIANFLOW","TLD","KCF" };
 	Rect2d roi1,roi2,roi3,roi4,roi5;
 	Mat frame;
 	VideoWriter output;
@@ -25,7 +24,7 @@ int main() {
 	Ptr<Tracker> trackerTLD = Tracker::create("TLD");
 	Ptr<Tracker> trackerMEDIANFLOW = Tracker::create("MEDIANFLOW");
 	// set input video
-	std::string video = "Basketball/img/%04d.jpg";
+	std::string video = "Blurface/img/%04d.jpg";
 	VideoCapture cap(video);
 	// get bounding box
 	cap >> frame;
@@ -37,7 +36,7 @@ int main() {
 	//videowriter setting
 	videoSize = Size(frame.cols, frame.rows);
 	fps = cap.get(CV_CAP_PROP_FPS);
-	sprintf_s(filename, "basketball.avi");
+	sprintf_s(filename, "blurface.avi");
 	output.open(filename, CV_FOURCC('M', 'J', 'P', 'G'), fps, videoSize);
 	
 	// initialize the tracker
