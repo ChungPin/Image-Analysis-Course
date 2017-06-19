@@ -18,9 +18,12 @@ int main() {
 	VideoWriter output;
 	Size videoSize;
 	int fps;
-	int m = 4;
 	// create a tracker object
-	Ptr<Tracker> tracker = Tracker::create(trackerMethod[m]);
+	Ptr<Tracker> trackerKCF = Tracker::create("KCF");
+	Ptr<Tracker> trackerMIL = Tracker::create("MIL");
+	Ptr<Tracker> trackerBOOSTING = Tracker::create("BOOSTING");
+	Ptr<Tracker> trackerTLD = Tracker::create("TLD");
+	Ptr<Tracker> trackerMEDIANFLOW = Tracker::create("MEDIANFLOW");
 	// set input video
 	std::string video = "Basketball/img/%04d.jpg";
 	VideoCapture cap(video);
@@ -30,13 +33,17 @@ int main() {
 	//videowriter setting
 	videoSize = Size(frame.cols, frame.rows);
 	fps = cap.get(CV_CAP_PROP_FPS);
-	sprintf_s(filename, "Basketball_%s.avi",trackerMethod[m]);
+	sprintf_s(filename, "Basketball.avi");
 	output.open(filename, CV_FOURCC('M', 'J', 'P', 'G'), fps, videoSize);
 	//quit if ROI was not selected
 	if (roi.width == 0 || roi.height == 0)
 		return 0;
 	// initialize the tracker
-	tracker->init(frame, roi);
+	trackerKCF->init(frame, roi);
+	trackerMIL->init(frame, roi);
+	trackerTLD->init(frame, roi);
+	trackerBOOSTING->init(frame, roi);
+	trackerMEDIANFLOW->init(frame, roi);
 	// perform the tracking process
 	printf("Start the tracking process, press ESC to quit.\n");
 	for (;; ) {
@@ -45,10 +52,18 @@ int main() {
 		// stop the program if no more images
 		if (frame.rows == 0 || frame.cols == 0)
 			break;
-		// update the tracking result
-		tracker->update(frame, roi);
-		// draw the tracked object
-		rectangle(frame, roi, Scalar(255, 0, 0), 2, 1);
+		// update the tracking result and draw the tracked object
+		trackerKCF->update(frame, roi);
+		rectangle(frame, roi, Scalar(255, 0, 0), 2, 1); //KCF blue
+		trackerMIL->update(frame, roi);
+		rectangle(frame, roi, Scalar(0, 255, 0), 2, 1); //MIL green
+		trackerTLD->update(frame, roi);
+		rectangle(frame, roi, Scalar(0, 0, 255), 2, 1); //TLD red
+		trackerBOOSTING->update(frame, roi);
+		rectangle(frame, roi, Scalar(255, 255, 0), 2, 1); //BOOSTING cyan
+		trackerMEDIANFLOW->update(frame, roi);
+		rectangle(frame, roi, Scalar(255, 0, 255), 2, 1); //MEDIANFLOW pink
+		
 		// show image with the tracked object
 		imshow("tracker", frame);
 		//write
