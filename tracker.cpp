@@ -63,7 +63,7 @@ int main() {
 		trackerBOOSTING->update(frame, roi4);
 		rectangle(frame, roi4, Scalar(255, 255, 0), 2, 1); //BOOSTING cyan
 		trackerMEDIANFLOW->update(frame, roi5);
-		rectangle(frame, roi5, Scalar(255, 0, 255), 2, 1); //MEDIANFLOW pink
+		rectangle(frame, roi5, Scalar(255, 0, 255), 2, 1); //MEDIANFLOW magenta
 		
 		// show image with the tracked object
 		imshow("tracker", frame);
